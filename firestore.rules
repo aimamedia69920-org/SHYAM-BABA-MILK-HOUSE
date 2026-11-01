@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 64;
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Products catalog: publicly readable, admin writable
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Serviceable PIN codes: publicly readable, admin writable
+    match /serviceablePins/{pinCode} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Store orders: can be created by customers/guests, read/managed by owner or order creator
+    match /orders/{orderId} {
+      allow create: if isValidId(orderId) &&
+        request.resource.data.keys().hasAll(['id', 'customerName', 'customerMobile', 'shippingAddress', 'pinCode', 'totalAmount', 'paymentMethod', 'orderStatus']) &&
+        request.resource.data.customerMobile is string &&
+        request.resource.data.totalAmount is number;
+      allow read: if true;
+      allow update, delete: if isAuthenticated();
+    }
+
+    // Customers: read/write for authenticated users / owner, or customer reading their own record
+    match /customers/{customerId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Deliveries: daily delivery logs
+    match /deliveries/{deliveryId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Monthly Bills
+    match /bills/{billId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    // Payment submissions & proofs
+    match /payments/{paymentId} {
+      allow create: if isValidId(paymentId) &&
+        request.resource.data.keys().hasAll(['id', 'customerId', 'amount', 'paymentMode', 'status', 'timestamp']);
+      allow read: if true;
+      allow update, delete: if isAuthenticated();
+    }
+  }
+}

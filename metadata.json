@@ -1,0 +1,6 @@
+{
+  "name": "SHYAM BABA MILK HOUSE",
+  "description": "Real-Time Dairy Milk Delivery Management System with Daily Tracking, Monthly Billing, Uploaded Paytm UPI QR, WhatsApp Integration, and AI Assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

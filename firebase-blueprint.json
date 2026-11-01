@@ -1,0 +1,152 @@
+{
+  "entities": {
+    "Customer": {
+      "title": "Customer",
+      "description": "Dairy customer profile and milk subscription settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique customer ID" },
+        "name": { "type": "string", "description": "Full name of customer" },
+        "mobile": { "type": "string", "description": "10-digit registered mobile number" },
+        "address": { "type": "string", "description": "Delivery address" },
+        "milkType": { "type": "string", "description": "Cow, Buffalo, Mix, or Other" },
+        "dailyQuantity": { "type": "number", "description": "Daily subscription quantity in liters" },
+        "ratePerLiter": { "type": "number", "description": "Agreed price per liter" },
+        "status": { "type": "string", "description": "active or inactive" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "name", "mobile", "milkType", "dailyQuantity", "ratePerLiter"]
+    },
+    "Delivery": {
+      "title": "Delivery",
+      "description": "Daily morning milk delivery record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Delivery record ID" },
+        "date": { "type": "string", "description": "YYYY-MM-DD date" },
+        "customerId": { "type": "string", "description": "Customer ID" },
+        "quantity": { "type": "number", "description": "Quantity delivered in liters" },
+        "rate": { "type": "number", "description": "Rate per liter" },
+        "milkType": { "type": "string", "description": "Type of milk delivered" },
+        "status": { "type": "string", "description": "delivered, cancelled, pending, or future" },
+        "notes": { "type": "string", "description": "Delivery note" },
+        "updatedAt": { "type": "string", "description": "Last update timestamp" }
+      },
+      "required": ["id", "date", "customerId", "quantity", "rate", "status"]
+    },
+    "Bill": {
+      "title": "Bill",
+      "description": "Monthly calculated milk bill for customer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Bill ID" },
+        "customerId": { "type": "string", "description": "Customer ID" },
+        "month": { "type": "string", "description": "Month in YYYY-MM format" },
+        "totalLiters": { "type": "number", "description": "Total milk delivered in month" },
+        "ratePerLiter": { "type": "number", "description": "Milk rate" },
+        "totalAmount": { "type": "number", "description": "Total bill amount" },
+        "paidAmount": { "type": "number", "description": "Amount paid so far" },
+        "balance": { "type": "number", "description": "Remaining unpaid balance" },
+        "status": { "type": "string", "description": "paid, partial, or unpaid" },
+        "generatedAt": { "type": "string", "description": "Generation timestamp" }
+      },
+      "required": ["id", "customerId", "month", "totalLiters", "totalAmount", "status"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "UPI / Cash payment record submitted by customer or owner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Payment ID" },
+        "customerId": { "type": "string", "description": "Customer ID" },
+        "month": { "type": "string", "description": "Bill month" },
+        "amount": { "type": "number", "description": "Payment amount in INR" },
+        "paymentMode": { "type": "string", "description": "paytm_upi or cash" },
+        "upiTransactionId": { "type": "string", "description": "UPI UTR / Reference ID" },
+        "status": { "type": "string", "description": "submitted, verified, or rejected" },
+        "screenshotUrl": { "type": "string", "description": "Payment screenshot data or URL" },
+        "timestamp": { "type": "string", "description": "Payment submission timestamp" }
+      },
+      "required": ["id", "customerId", "amount", "paymentMode", "status", "timestamp"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Dairy catalog product for online store",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Product ID" },
+        "name": { "type": "string", "description": "Product name in English" },
+        "nameHi": { "type": "string", "description": "Product name in Hindi" },
+        "category": { "type": "string", "description": "Category slug" },
+        "price": { "type": "number", "description": "Selling price in INR" },
+        "unit": { "type": "string", "description": "Unit like 1 Liter, 500 gm" },
+        "inStock": { "type": "boolean", "description": "Inventory stock availability" },
+        "stockQuantity": { "type": "number", "description": "Available stock count" },
+        "image": { "type": "string", "description": "Product image URL" }
+      },
+      "required": ["id", "name", "category", "price", "unit", "inStock"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Online store purchase order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Order ID (e.g. SMB-123456-789)" },
+        "customerId": { "type": "string", "description": "Customer ID or guest" },
+        "customerName": { "type": "string", "description": "Recipient full name" },
+        "customerMobile": { "type": "string", "description": "Contact mobile number" },
+        "shippingAddress": { "type": "string", "description": "Full delivery address" },
+        "pinCode": { "type": "string", "description": "Delivery PIN code" },
+        "totalAmount": { "type": "number", "description": "Final order total" },
+        "paymentMethod": { "type": "string", "description": "cod or paytm_upi" },
+        "paymentStatus": { "type": "string", "description": "pending, verified, or cod" },
+        "orderStatus": { "type": "string", "description": "pending, confirmed, out_for_delivery, delivered, cancelled" },
+        "createdAt": { "type": "string", "description": "Order timestamp" }
+      },
+      "required": ["id", "customerName", "customerMobile", "shippingAddress", "pinCode", "totalAmount", "paymentMethod", "orderStatus"]
+    },
+    "ServiceablePin": {
+      "title": "ServiceablePin",
+      "description": "PIN code eligible for dairy home delivery",
+      "type": "object",
+      "properties": {
+        "pinCode": { "type": "string", "description": "6-digit Indian PIN code" },
+        "city": { "type": "string", "description": "City or Village" },
+        "district": { "type": "string", "description": "District" },
+        "state": { "type": "string", "description": "State" },
+        "active": { "type": "boolean", "description": "Whether active for delivery" }
+      },
+      "required": ["pinCode", "city", "state", "active"]
+    }
+  },
+  "firestore": {
+    "/customers/{customerId}": {
+      "schema": "Customer",
+      "description": "Dairy customer accounts and subscriptions"
+    },
+    "/deliveries/{deliveryId}": {
+      "schema": "Delivery",
+      "description": "Daily milk delivery tracking entries"
+    },
+    "/bills/{billId}": {
+      "schema": "Bill",
+      "description": "Monthly calculated customer bills"
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "Payment records and proofs"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Catalog of dairy products"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Online customer store orders"
+    },
+    "/serviceablePins/{pinCode}": {
+      "schema": "ServiceablePin",
+      "description": "Delivery areas and serviceable PIN codes"
+    }
+  }
+}
